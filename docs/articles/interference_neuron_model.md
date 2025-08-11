@@ -38,30 +38,20 @@
 ### 2.2 Прямой проход
 
 1. **Взвешивание входов**  
-   $$
-   x_i = w_i a_i \quad\Rightarrow\quad \mathbf{x} = \mathbf{w} \odot \mathbf{a}
-   $$
+$x_i = w_i a_i \quad\Rightarrow\quad \mathbf{x} = \mathbf{w} \odot \mathbf{a}$
 
 2. **Дендритная интерференция**  
-   $$
-   \mathbf{z} = U\,\mathbf{x}
-   $$
+$\mathbf{z} = U\,\mathbf{x}$
 
 3. **Нелинейная фазовая модуляция (интенсивностная, «кэрровская»)**  
-   $$
-   \tilde z_k = z_k \cdot e^{\,i\,\alpha |z_k|^2}
-   $$  
+$\tilde{z}_k = z_k \cdot e^{\,i\,\alpha |z_k|^2}$  
    где $\alpha$ — коэффициент нелинейной фазовой задержки.
 
 4. **Сумма в аксонном холмике**  
-   $$
-   \psi = \sum_{k=1}^m \tilde z_k
-   $$
+$\psi = \sum_{k=1}^m \tilde{z}_k$
 
 5. **Декогерентная смесь** (вводим $\gamma$, гася поперечные члены):  
-   $$
-   |\psi|_\gamma^2 = \sum_k |\tilde z_k|^2 + \gamma \sum_{k \neq \ell} \tilde z_k \tilde z_\ell^*
-   $$  
+$|\psi|_\gamma^2 = \sum_k |\tilde{z}_k|^2 + \gamma \sum_{k \neq \ell} \tilde{z}_k \tilde{z}_\ell^*$  
 
    - $\gamma=1$: идеальная интерференция;  
    - $\gamma=0$: нет интерференции, остаётся сумма интенсивностей (классический предел).
@@ -71,9 +61,7 @@
 ### 2.3 Правило спайка
 
 - **Вероятностный режим**:  
-  $$
-  p(\text{spike}) = \sigma\!\left(\beta |\psi|_\gamma^2 - \vartheta\right)
-  $$  
+$p(\text{spike}) = \sigma\!\left(\beta |\psi|_\gamma^2 - \vartheta\right)$  
   где $\sigma$ — логистическая функция, $\beta$ — крутизна, $\vartheta$ — порог.
 
 - **Детерминированный режим**:  
@@ -84,14 +72,10 @@
 ### 2.4 Шум и когерентность
 
 - **Фазовый шум**:  
-  $$
-  \varphi_i \leftarrow \varphi_i + \epsilon_i, \quad \epsilon_i \sim \mathcal{N}(0, \sigma_\varphi^2)
-  $$  
+$\varphi_i \leftarrow \varphi_i + \epsilon_i, \quad \epsilon_i \sim \mathcal{N}(0, \sigma_\varphi^2)$  
 
 - **Затухание когерентности во времени окна $\Delta t$**:  
-  $$
-  \gamma = \exp(-\Delta t / \tau_c)
-  $$  
+$\gamma = \exp(-\Delta t / \tau_c)$  
 
 ---
 
@@ -101,41 +85,25 @@
 
 - Целевая метка: $ y \in \{0, 1\} $  
 - Логистическая потеря:  
-  $$
-  \mathcal{L} = -[y\log p + (1-y)\log(1-p)]
-  $$  
+$\mathcal{L} = -[y\log p + (1-y)\log(1-p)]$  
 
 - Производная:  
-  $$
-  \frac{\partial \mathcal{L}}{\partial w_i^*} =
-  \frac{\partial \mathcal{L}}{\partial p} \cdot
-  \frac{\partial p}{\partial |\psi|_\gamma^2} \cdot
-  \frac{\partial |\psi|_\gamma^2}{\partial \psi^*} \cdot
-  \frac{\partial \psi}{\partial w_i^*}
-  $$  
+$\frac{\partial \mathcal{L}}{\partial w_i^*} = \frac{\partial \mathcal{L}}{\partial p} \cdot \frac{\partial p}{\partial |\psi|_\gamma^2} \cdot \frac{\partial |\psi|_\gamma^2}{\partial \psi^*} \cdot \frac{\partial \psi}{\partial w_i^*}$  
 
   где:  
-  $$
-  \frac{\partial p}{\partial |\psi|_\gamma^2} = \beta\,\sigma(1-\sigma)
-  $$  
-  $$
-  \frac{\partial |\psi|_\gamma^2}{\partial \psi^*} = \psi
-  $$  
+$\frac{\partial p}{\partial |\psi|_\gamma^2} = \beta\,\sigma(1-\sigma)$  
+$\frac{\partial |\psi|_\gamma^2}{\partial \psi^*} = \psi$  
   (для $\gamma=1$; с $\gamma < 1$ добавляются кросс-члены).  
 
 - Обновление весов:  
-  $$
-  w_i \leftarrow w_i - \eta \frac{\partial \mathcal{L}}{\partial w_i^*} - \lambda w_i
-  $$  
+$w_i \leftarrow w_i - \eta \frac{\partial \mathcal{L}}{\partial w_i^*} - \lambda w_i$  
   где $\lambda$ — L2-регуляризация / Oja-стабилизация нормы.
 
 ---
 
 #### (B) Фазочувствительный Хебб
 
-$$
-\Delta w_i = \eta\, a_i\, \psi^* - \lambda |a_i|^2\, w_i
-$$  
+$\Delta w_i = \eta\, a_i\, \psi^* - \lambda |a_i|^2\, w_i$  
 
 — усиливаем веса, когерентные по фазе с выходом (через $\psi^*$); второй член нормирует (Oja-подобно).  
 Можно добавить STDP-вкус: $\eta \to \eta(\Delta t)$ с окном времени и $\gamma(\Delta t)$.
